@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Error Correction … is like</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<style>
+:root {
+  --bg: #111417;
+  --bg-card: #181c22;
+  --bg-card2: #1e232b;
+  --text: #bfc8d6;
+  --text-bright: #e4eaf2;
+  --text-muted: #5e6a7a;
+  --heading: #f0f3f7;
+  --red: #e05252;
+  --red-dim: rgba(224,82,82,0.1);
+  --orange: #e8913a;
+  --orange-dim: rgba(232,145,58,0.1);
+  --green: #3dba6f;
+  --green-dim: rgba(61,186,111,0.1);
+  --blue: #4a9de8;
+  --blue-dim: rgba(74,157,232,0.1);
+  --violet: #9b72e8;
+  --violet-dim: rgba(155,114,232,0.1);
+  --cyan: #40c9c9;
+  --cyan-dim: rgba(64,201,201,0.1);
+  --border: rgba(200,220,240,0.07);
+  --font-body: 'Source Serif 4', Georgia, serif;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--bg); color:var(--text); font-family:var(--font-body); font-size:18px; line-height:1.78; -webkit-font-smoothing:antialiased; }
+::selection { background:var(--blue-dim); color:var(--blue); }
+
+.container { max-width:740px; margin:0 auto; padding:0 24px; }
+
+/* header */
+header { padding:80px 0 48px; text-align:center; position:relative; }
+header::after { content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:60px; height:1px; background:var(--border); }
+header h1 { font-family:var(--font-display); font-size:clamp(2.2rem,5.5vw,3.4rem); color:var(--heading); line-height:1.1; letter-spacing:-0.02em; }
+header h1 .strike { text-decoration:line-through; text-decoration-color:var(--red); text-decoration-thickness:3px; opacity:0.55; }
+header h1 .is { color:var(--red); font-style:italic; }
+header .deck { font-size:1rem; color:var(--text-muted); max-width:500px; margin:20px auto 0; font-style:italic; }
+
+/* sections */
+section { padding:44px 0 28px; }
+section.fade { opacity:0; transform:translateY(16px); transition:opacity 0.5s, transform 0.5s; }
+section.visible { opacity:1; transform:translateY(0); }
+
+h2 { font-family:var(--font-display); font-size:1.45rem; color:var(--heading); margin-bottom:12px; }
+h2 .tag { font-family:var(--font-mono); font-size:0.48em; padding:3px 9px; border-radius:4px; vertical-align:middle; margin-right:6px; font-weight:500; letter-spacing:0.04em; text-transform:uppercase; }
+h3 { font-family:var(--font-body); font-weight:700; font-size:1.05rem; color:var(--text-bright); margin:20px 0 6px; }
+p { margin-bottom:12px; }
+strong { color:var(--text-bright); }
+em { font-style:italic; }
+
+.math-block { background:var(--bg-card); border:1px solid var(--border); border-radius:6px; padding:14px 18px; margin:16px 0; overflow-x:auto; text-align:center; }
+code { font-family:var(--font-mono); font-size:0.84em; background:var(--bg-card); padding:1px 5px; border-radius:3px; }
+
+/* taxonomy cards */
+.tax-card {
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  margin:16px 0;
+  overflow:hidden;
+}
+.tax-card .card-head {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 16px;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  user-select:none;
+  transition:background 0.2s;
+}
+.tax-card .card-head:hover { background:var(--bg-card2); }
+.tax-card .card-head .dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.tax-card .card-head h3 { margin:0; font-size:0.95rem; flex:1; }
+.tax-card .card-head .arrow { font-family:var(--font-mono); font-size:0.8rem; color:var(--text-muted); transition:transform 0.3s; }
+.tax-card .card-head .arrow.open { transform:rotate(90deg); }
+.tax-card .card-body { padding:0 16px; max-height:0; overflow:hidden; transition:max-height 0.4s ease, padding 0.3s; }
+.tax-card .card-body.open { max-height:600px; padding:12px 16px; }
+.tax-card .card-body p { font-size:0.92rem; margin-bottom:8px; }
+
+/* comparison table */
+.cmp-table {
+  width:100%;
+  border-collapse:collapse;
+  margin:16px 0;
+  font-size:0.88rem;
+}
+.cmp-table th, .cmp-table td {
+  padding:8px 12px;
+  border:1px solid var(--border);
+  text-align:left;
+}
+.cmp-table th {
+  background:var(--bg-card);
+  font-family:var(--font-mono);
+  font-size:0.78rem;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+}
+.cmp-table td { vertical-align:top; }
+.cmp-table .col-id { color:var(--green); }
+.cmp-table .col-an { color:var(--orange); }
+.cmp-table .col-nw { color:var(--violet); }
+
+/* verdict bar */
+.verdict {
+  display:flex; gap:2px; margin:20px 0; border-radius:6px; overflow:hidden; height:8px;
+}
+.verdict span { flex:1; }
+
+/* aside */
+.aside {
+  border-left:3px solid var(--blue);
+  background:var(--blue-dim);
+  padding:10px 14px;
+  margin:16px 0;
+  border-radius:0 6px 6px 0;
+  font-size:0.9rem;
+  color:var(--text);
+}
+.aside.red { border-left-color:var(--red); background:var(--red-dim); }
+.aside.green { border-left-color:var(--green); background:var(--green-dim); }
+.aside.violet { border-left-color:var(--violet); background:var(--violet-dim); }
+
+/* footer */
+.sep { width:60px; height:1px; background:var(--border); margin:12px auto; }
+footer { text-align:center; padding:36px 0 56px; font-size:0.8rem; color:var(--text-muted); }
+footer a { color:var(--blue); text-decoration:none; }
+footer a:hover { text-decoration:underline; }
+
+@media (max-width:600px) { .container{padding:0 16px;} header{padding:48px 0 28px;} section{padding:28px 0 18px;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>Quantum Error Correction<br><span class="strike">is like</span> <span class="is">is</span></h1>
+    <p class="deck">Separating what is identical, what is analogous, and what is genuinely new.</p>
+  </div>
+</header>
+
+<main class="container">
+
+<!-- ====== INTRO ====== -->
+<section class="fade">
+<p>In modern science people often say "this is <em>like</em> …" when what they really mean is something more precise: <strong>the same mathematical structure appears</strong>, even though the physical interpretation differs.</p>
+<p>So let us separate what is identical, what is analogous, and what is genuinely new in quantum fault-tolerant error correction.</p>
+
+<div class="verdict">
+  <span style="background:var(--green); flex:3;" title="Identical"></span>
+  <span style="background:var(--orange); flex:2;" title="Analogous"></span>
+  <span style="background:var(--violet); flex:1;" title="Novel"></span>
+</div>
+<p style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text-muted); display:flex; justify-content:space-between;">
+  <span style="color:var(--green);">Mathematically identical</span>
+  <span style="color:var(--orange);">Structural analogy</span>
+  <span style="color:var(--violet);">Genuinely novel</span>
+</p>
+</section>
+
+<!-- ====== 1. IDENTICAL ====== -->
+<section class="fade">
+<h2><span class="tag" style="background:var(--green-dim);color:var(--green);">identical</span> The same mathematics, reused</h2>
+
+<p>Some of the tools used in quantum error correction are <strong>literally</strong> the same mathematics used elsewhere. Not analogies. Not metaphors. The same theorems, the same algorithms, the same algebraic objects.</p>
+
+<div class="tax-card" data-open="true">
+  <div class="card-head">
+    <span class="dot" style="background:var(--green);"></span>
+    <h3>Graph theory</h3>
+    <span class="arrow open">▸</span>
+  </div>
+  <div class="card-body open">
+    <p>Error-correction decoding uses graphs: vertices = qubits or checks, edges = constraints. This is exactly the same mathematics used in electrical network analysis, flow problems in algorithms, and lattice models in statistical physics.</p>
+    <p>The <strong>Minimum Weight Perfect Matching</strong> algorithm used in surface-code decoding is the same algorithm used in logistics optimisation and pairing problems in combinatorics. Nothing metaphorical. The same code runs.</p>
+  </div>
+</div>
+
+<div class="tax-card">
+  <div class="card-head">
+    <span class="dot" style="background:var(--green);"></span>
+    <h3>Linear algebra over \(\mathbb{F}_2\)</h3>
+    <span class="arrow">▸</span>
+  </div>
+  <div class="card-body">
+    <p>Parity checks are linear equations over \(\mathbb{F}_2\). This is the same mathematics used in classical error-correcting codes, digital communications, and linear block codes. The incidence matrix of a graph, the parity-check matrix of a code, and the boundary operator of a chain complex are the same object wearing different hats.</p>
+    <p>The condition \(H_X H_Z^\top = 0\) for a CSS code is \(\partial^2 = 0\) in homological algebra. Not an analogy. An identity.</p>
+  </div>
+</div>
+
+<div class="tax-card">
+  <div class="card-head">
+    <span class="dot" style="background:var(--green);"></span>
+    <h3>Kirchhoff's laws and the Laplacian</h3>
+    <span class="arrow">▸</span>
+  </div>
+  <div class="card-body">
+    <p>KCL and KVL are the two fundamental subspaces of the incidence matrix (cycle space and cut space). The graph Laplacian \(L = D - A\) governs diffusion, effective resistance, and spanning-tree enumeration. These are used identically in circuit analysis, spectral clustering, and surface-code syndrome decoding.</p>
+  </div>
+</div>
+
+<div class="tax-card">
+  <div class="card-head">
+    <span class="dot" style="background:var(--green);"></span>
+    <h3>Topology: cycles on surfaces</h3>
+    <span class="arrow">▸</span>
+  </div>
+  <div class="card-body">
+    <p>The homology group \(H_1 = \ker(\partial_1) / \text{im}(\partial_2)\) classifies non-contractible cycles. In the surface code, these are the logical operators. In algebraic topology, these are the generators of the first homology group of the surface. Same definition. Same computation. Same vector space.</p>
+  </div>
+</div>
+</section>
+
+<!-- ====== 2. ANALOGOUS ====== -->
+<section class="fade">
+<h2><span class="tag" style="background:var(--orange-dim);color:var(--orange);">analogous</span> Where statistical physics enters</h2>
+
+<p>Now consider decoding thresholds. The probability that errors form a logical failure depends on whether error chains span the lattice. This behaviour matches <strong>percolation theory</strong>. But here the relation is not a metaphor and not an analogy. It is a <strong>mathematical mapping</strong>.</p>
+
+<div class="tax-card" data-open="true">
+  <div class="card-head">
+    <span class="dot" style="background:var(--orange);"></span>
+    <h3>Random-bond Ising model</h3>
+    <span class="arrow open">▸</span>
+  </div>
+  <div class="card-body open">
+    <p>The decoding problem can literally be <strong>transformed into</strong> a random-bond Ising model. Maximum-likelihood decoding at error rate \(p\) is the partition function evaluated on the Nishimori line. The error threshold \(p_c \approx 10.3\%\) equals a phase transition. Physicists borrow tools developed for the Ising model because the problem <em>is</em> an instance of the Ising model.</p>
+    <p>The relation is tighter than analogy but looser than identity: the mathematical structures are isomorphic, but the physical substrates (qubits vs magnetic spins) differ.</p>
+  </div>
+</div>
+
+<div class="tax-card">
+  <div class="card-head">
+    <span class="dot" style="background:var(--orange);"></span>
+    <h3>Percolation and cluster spanning</h3>
+    <span class="arrow">▸</span>
+  </div>
+  <div class="card-body">
+    <p>Below the error threshold, error clusters are small and isolated. Above it, a giant connected component spans the system and decoding fails. The critical exponents (\(\nu = 4/3\), \(\tau = 187/91\) in 2D) are universal: identical for bond percolation on any planar lattice. The surface code inherits this universality class.</p>
+  </div>
+</div>
+
+<div class="tax-card">
+  <div class="card-head">
+    <span class="dot" style="background:var(--orange);"></span>
+    <h3>Crack propagation (the loose end)</h3>
+    <span class="arrow">▸</span>
+  </div>
+  <div class="card-body">
+    <p>Crack propagation in materials also studies cluster formation and percolation. Both systems involve networks and failure when a cluster spans the system. But here the relationship is more genuinely analogical. The mathematics of cluster growth overlaps, but the underlying physics differs.</p>
+    <table class="cmp-table">
+      <tr><th>Crack formation</th><th>Quantum error correction</th></tr>
+      <tr><td>Mechanical stress</td><td>Probabilistic errors</td></tr>
+      <tr><td>Fracture propagation</td><td>Error chains</td></tr>
+      <tr><td>Material failure</td><td>Logical fault</td></tr>
+    </table>
+    <p>The percolation framework applies to both, but the mapping is structural, not exact.</p>
+  </div>
+</div>
+</section>
+
+<!-- ====== 3. WHAT YOU ALREADY KNOW ====== -->
+<section class="fade">
+<h2><span class="tag" style="background:var(--blue-dim);color:var(--blue);">familiar</span> What an undergraduate already knows</h2>
+
+<p>Someone trained in mathematics or physics will recognise most of the pieces.</p>
+
+<table class="cmp-table">
+  <tr><th>Field</th><th>Familiar concept</th><th>Role in QEC</th></tr>
+  <tr><td>Linear algebra</td><td>Parity matrices over \(\mathbb{F}_2\)</td><td>Stabiliser checks</td></tr>
+  <tr><td>Graph theory</td><td>Matching algorithms</td><td>Syndrome decoding</td></tr>
+  <tr><td>Statistical physics</td><td>Ising model, phase transitions</td><td>Error threshold</td></tr>
+  <tr><td>Probability</td><td>Markov processes</td><td>Error models</td></tr>
+  <tr><td>Topology</td><td>Cycles on surfaces</td><td>Logical operators</td></tr>
+  <tr><td>Number theory</td><td>Field extensions, Galois groups</td><td>Code structure, eigenvalue hierarchies</td></tr>
+</table>
+
+<p>Quantum error correction stitches these together. The novelty is not in any single piece but in the constraints that force the stitching.</p>
+</section>
+
+<!-- ====== 4. GENUINELY NOVEL ====== -->
+<section class="fade">
+<h2><span class="tag" style="background:var(--violet-dim);color:var(--violet);">novel</span> What is genuinely new</h2>
+
+<p>The genuinely new ingredient is <strong>quantum information constraints</strong>. Two physical facts change everything:</p>
+
+<div class="aside violet">
+<strong>No-Cloning Theorem.</strong> A quantum state cannot be copied. Classical redundancy (repeat the bit three times) is forbidden. Information must be stored in entanglement correlations, not in copies.
+</div>
+
+<div class="aside violet">
+<strong>Measurement collapses the state.</strong> You cannot inspect a qubit to check whether it has an error without destroying the information it carries. Syndrome extraction must be indirect: you measure stabilisers (multi-qubit parity operators) that detect errors without revealing the encoded state.
+</div>
+
+<p>These two constraints force the unusual stabiliser structures used in quantum codes. Classical codes protect <strong>bits</strong>. Quantum codes protect <strong>subspaces of Hilbert space</strong>. Instead of protecting individual values, the code protects a global structure defined by stabiliser constraints.</p>
+
+<h3>The key conceptual leap</h3>
+
+<p>A classical error-correcting code is a subspace of \(\mathbb{F}_2^n\) defined by parity checks.</p>
+<p>A quantum error-correcting code is a subspace of \(\mathbb{C}^{2^n}\) defined by stabiliser operators that must <em>commute</em>.</p>
+<p>The commutativity requirement (\(H_X H_Z^\top = 0\)) is the genuinely quantum constraint. It is the condition \(\partial^2 = 0\) in the chain complex of the code's lattice. Everything else, the graphs, the matchings, the Ising models, the percolation, follows from this single algebraic requirement meeting the physical constraints of quantum measurement.</p>
+</section>
+
+<!-- ====== 5. THE SENTENCE ====== -->
+<section class="fade">
+<h2>A clearer way to say it</h2>
+
+<p>Without "like":</p>
+
+<div class="math-block" style="text-align:left; font-size:0.95rem; line-height:2; padding:20px 24px;">
+Quantum fault-tolerant error correction is a <strong style="color:var(--green);">linear code over \(\mathbb{F}_2\)</strong> embedded in a <strong style="color:var(--green);">graph</strong>, where decoding becomes a <strong style="color:var(--orange);">statistical inference problem</strong> equivalent to finding ground states in certain <strong style="color:var(--orange);">spin systems</strong>, subject to the <strong style="color:var(--violet);">quantum constraint</strong> that stabilisers must commute (i.e. \(\partial^2 = 0\)).
+</div>
+
+<p>Every coloured word in that sentence names a mathematical structure that exists independently of quantum mechanics. The quantum part is the constraint that forces these structures to fit together in exactly the way they do.</p>
+
+<div class="aside green">
+<strong>The taxonomy.</strong>
+<span style="color:var(--green);">Green</span> = mathematically identical (same theorems, same algorithms).
+<span style="color:var(--orange);">Orange</span> = structural mapping (isomorphic mathematics, different physics).
+<span style="color:var(--violet);">Violet</span> = genuinely quantum (no classical counterpart).
+</div>
+</section>
+
+<div class="sep"></div>
+
+<footer>
+  <p>"Quantum Error Correction … is like"</p>
+  <p style="margin-top:6px;">
+    <a href="quantum-error-correction.html">Surface Code Explainer</a>
+    &middot; <a href="incidence-matrices.html">Incidence Matrices</a>
+    &middot; <a href="spectral-invariants.html">Spectral Invariants</a>
+    &middot; <a href="kirchhoff-squared-rectangles.html">Kirchhoff &amp; Squared Rectangles</a>
+  </p>
+  <p style="margin-top:6px;">
+    <a href="https://leelemacjames.github.io/adjacencyMatrix/">Adjacency Matrix</a>
+    &middot; <a href="https://leelemacjames.github.io/spectral-Analysis-Matrices/">Spectral Analysis</a>
+    &middot; <a href="https://leelemacjames.github.io/kirchoff-compositerectangle/">Kirchhoff Rectangles</a>
+  </p>
+</footer>
+
+</main>
+
+<script>
+// Accordion toggle
+document.querySelectorAll('.tax-card .card-head').forEach(head => {
+  head.addEventListener('click', () => {
+    const body = head.nextElementSibling;
+    const arrow = head.querySelector('.arrow');
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+  });
+});
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.05, rootMargin: '0px 0px 40px 0px' });
+document.querySelectorAll('section.fade').forEach(s => obs.observe(s));
+setTimeout(() => document.querySelectorAll('section.fade').forEach(s => s.classList.add('visible')), 600);
+
+// KaTeX
+renderMathInElement(document.body, {
+  delimiters: [
+    { left: '$$', right: '$$', display: true },
+    { left: '\\(', right: '\\)', display: false },
+  ],
+  throwOnError: false,
+});
+</script>
+</body>
+</html>
